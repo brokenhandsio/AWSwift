@@ -1,4 +1,4 @@
-struct AWSwiftDynamoDB: DynamoDbAction {
+public struct AWSwiftDynamoDB: DynamoDbAction {
     
     fileprivate let awsAccessKeyId: String
     fileprivate let awsAccessKeySecret: String
