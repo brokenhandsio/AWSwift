@@ -8,7 +8,7 @@ public struct AWSwiftDynamoDB: DynamoDbAction {
         self.awsAccessKeySecret = awsAccessKeySecret
     }
     
-    public func getItem(table: DynamoDbTable, key: [String : String], completion: @escaping ((_ itemJsonString: String) -> Void)) {
+    public func getItem(table: DynamoDbTable, key: [String : [String: String]], completion: @escaping ((_ itemJsonString: String) -> Void)) {
         let request = [
             "TableName": table.tableName,
             "Key": key
