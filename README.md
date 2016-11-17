@@ -16,9 +16,52 @@ AWSwift can be installed using Cocoapods and the Swift Package Manager.
 
 ### Cocoapods
 
+Coming soon...
+
 ### Swift Package Manager
 
+To use AWSwift, just include it as a dependency in your `Package.swift` file:
+
+```swift
+let package = Package(
+    name: "MyPackage",
+    dependencies: [
+        .Package(url: "https://github.com/brokenhandsio/AWSwift.git", majorVersion: 0)
+    ]
+)
+
+```
+
 ## Usage
+
+### DynamoDB
+
+Create an instance of the `AWSwiftDynamoDb` with your access ID and access Key Secret:
+
+```swift
+
+let dynamoDb = AWSwiftDynamoDb(awsAccessKeyId: accessID, awsAccessKeySecret: accessSecret)
+```
+
+Create a `DynamoDbTable` with the details for the table:
+
+```swift
+let petsTable = DynamoDbTable(tableName: "Pets", partitionKey: "AnimalType", sortKey: "Name")
+```
+
+Then perform the action that you want. For a get, you need a key and use it as so:
+
+```swift
+let key = [
+    "AnimalType": ["S": "Dog"],
+    "Name": ["S" : "Fred"]
+]
+
+dynamoDb.getItem(table: petsTable, key: key, completion: {
+    response in
+    print(response)
+})
+```
 
 ## Vapor Providers
 
