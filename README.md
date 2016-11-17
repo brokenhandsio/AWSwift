@@ -57,10 +57,10 @@ let key = [
     "Name": ["S" : "Fred"]
 ]
 
-dynamoDb.getItem(table: petsTable, key: key, completion: {
+dynamoDb.getItem(table: petsTable, key: key) {
     response in
     print(response)
-})
+}
 ```
 
 ## Vapor Providers
