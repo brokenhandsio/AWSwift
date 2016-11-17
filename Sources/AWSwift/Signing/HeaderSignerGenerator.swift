@@ -69,7 +69,7 @@ struct HeaderSignerGenerator: Aws4Signer {
         // Headers
         // Header keys must be in alphabetical order and lowercase and trimmed
         
-        // TODO need to trum
+        // TODO need to trim
         let sortedKeys = Array(headers.keys).sorted()
         
         for key in sortedKeys {
@@ -91,7 +91,6 @@ struct HeaderSignerGenerator: Aws4Signer {
         canonicalRequest += bodyPayload.sha256()
         
         // Return SHA256
-        
         return canonicalRequest.sha256()
     }
     
@@ -113,7 +112,7 @@ struct HeaderSignerGenerator: Aws4Signer {
         signingString += "\(dateOnlyFormatter.string(from: requestDate))/\(region.rawValue)/\(service.getServiceHostname())/aws4_request\n"
         
         // Hashed Canonical Request
-        signingString += "\(canonicalRequestHash)\n"
+        signingString += "\(canonicalRequestHash)"
         
         return signingString
     }
@@ -158,12 +157,9 @@ struct HeaderSignerGenerator: Aws4Signer {
     }
     
     internal func getSignedHeadersString(_ signedHeaders: [String]) -> String {
-        // TODO do this properly - check we have the ones we need etc
-        var signedHeadersString = ""
         let sortedSignedHeaderKeys = signedHeaders.sorted()
-        for key in sortedSignedHeaderKeys {
-            signedHeadersString += "\(key);"
-        }
+        let signedHeaderUppercase = sortedSignedHeaderKeys.joined(separator: ";")
+        let signedHeadersString = signedHeaderUppercase.lowercased()
         return signedHeadersString
     }
 }

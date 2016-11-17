@@ -19,7 +19,7 @@ struct AwsRequest {
     }
     
     func makeRequest(onCompletion: (_ jsonResponse: String?, _ error: String?) -> Void) {
-        let headerHost = "\(service.getServiceHostname()).\(region).amazonaws.com"
+        let headerHost = "\(service.getServiceHostname()).\(region.rawValue).amazonaws.com"
         let urlString = "https://\(headerHost)"
         let url = URL(string: urlString)!
         var urlRequest = URLRequest(url: url)
