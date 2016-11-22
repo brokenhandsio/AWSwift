@@ -7,8 +7,26 @@ enum DynamoDbService: AwsService {
         switch self {
         case .getItem:
             return "DynamoDB_20120810.GetItem"
+        case .putItem:
+            return "DynamoDB_20120810.PutItem"
+        case .updateItem:
+            return "DynamoDB_20120810.UpdateItem"
+        case .deleteItem:
+            return "DynamoDB_20120810.DeleteItem"
+        case .createTable:
+            return "DynamoDB_20120810.CreateTable"
+        case .deleteTable:
+            return "DynamoDB_20120810.DeleteTable"
+        case .updateTable:
+            return "DynamoDB_20120810.UpdateTable"
         }
     }
     
     case getItem
+    case putItem
+    case updateItem
+    case deleteItem
+    case createTable
+    case deleteTable
+    case updateTable
 }
