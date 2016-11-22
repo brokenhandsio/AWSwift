@@ -11,7 +11,9 @@ public struct AWSwiftDynamoDb: DynamoDbAction {
     public func getItem(table: DynamoDbTable, keyValues: DynamoDbTableKeyValues, completion: @escaping ((_ itemJsonString: String) -> Void)) {
         
         var key = [
-            table.partitionKey: keyValues.partitionKeyValue
+            table.partitionKey: [
+                "S": keyValues.partitionKeyValue
+            ]
         ]
         
         if let sortKey = table.sortKey {
@@ -19,7 +21,7 @@ public struct AWSwiftDynamoDb: DynamoDbAction {
                 fatalError("Table has sort key but no sort key specified")
             }
             
-            key[sortKey] = sortKeyValue
+            key[sortKey] = ["S" :sortKeyValue]
         }
         
         let request = [
@@ -33,7 +35,7 @@ public struct AWSwiftDynamoDb: DynamoDbAction {
         }
     }
     
-    func putItem(table: DynamoDbTable, item: [String : Any], condition: String, conditionAttributes: [String : [String : String]], completion: @escaping ((Error?) -> Void)) {
+    public func putItem(table: DynamoDbTable, item: [String : Any], condition: String, conditionAttributes: [String : [String : String]], completion: @escaping ((Error?) -> Void)) {
         let request = [
             "TableName": table.tableName,
             "Item": item,
