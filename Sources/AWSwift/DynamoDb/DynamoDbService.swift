@@ -13,6 +13,8 @@ enum DynamoDbService: AwsService {
             return "DynamoDB_20120810.UpdateItem"
         case .deleteItem:
             return "DynamoDB_20120810.DeleteItem"
+        case .scan:
+            return "DynamoDB_20120810.Scan"
         case .createTable:
             return "DynamoDB_20120810.CreateTable"
         case .deleteTable:
@@ -26,6 +28,7 @@ enum DynamoDbService: AwsService {
     case putItem
     case updateItem
     case deleteItem
+    case scan
     case createTable
     case deleteTable
     case updateTable

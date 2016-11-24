@@ -65,3 +65,7 @@ struct AwsRequest {
     }
     
 }
+
+public enum AwsRequestErorr: Error {
+    case failed(message: String)
+}

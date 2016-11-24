@@ -35,7 +35,7 @@ public struct AWSwiftDynamoDb: DynamoDbAction {
         }
     }
     
-    public func putItem(table: DynamoDbTable, item: [String : Any], condition: String, conditionAttributes: [String : [String : String]], completion: @escaping ((Error?) -> Void)) {
+    public func putItem(table: DynamoDbTable, item: [String : Any], condition: String, conditionAttributes: [String : [String : String]], completion: @escaping ((_ error: AwsRequestErorr?) -> Void)) {
         let request = [
             "TableName": table.tableName,
             "Item": item,
@@ -52,6 +52,46 @@ public struct AWSwiftDynamoDb: DynamoDbAction {
             else {
                 print("Success")
             }
+        }
+    }
+    
+    public func deleteItem(table: DynamoDbTable, keyValue: DynamoDbTableKeyValues, conditionExpression: String?, returnValues: DynamoDbReturnValue?, completion: @escaping ((_ response: [String: Any]?, _ error: AwsRequestErorr?) -> Void)) {
+        
+        // Check valid return value
+        if let returnValues = returnValues {
+            switch returnValues {
+            case .none, .allOld: break
+            default:
+                // Invalid return type
+                completion(nil, AwsRequestErorr.failed(message: "Invalid return value for delete"))
+            }
+        }
+        
+        var key = [
+            table.partitionKey: [
+                "S": keyValue.partitionKeyValue
+            ]
+        ]
+        
+        if let sortKey = table.sortKey {
+            guard let sortKeyValue = keyValue.sortKeyValue else {
+                fatalError("Table has sort key but no sort key specified")
+            }
+            
+            key[sortKey] = ["S" :sortKeyValue]
+        }
+        
+        var request = [
+            "TableName": table.tableName,
+            "Key": key
+        ] as [String: Any]
+        
+        if let conditionExpression = conditionExpression {
+            request["ConditionExpression"] = conditionExpression
+        }
+        
+        if let returnValues = returnValues {
+            request["ReturnValues"] = returnValues.rawValue
         }
     }
 }
