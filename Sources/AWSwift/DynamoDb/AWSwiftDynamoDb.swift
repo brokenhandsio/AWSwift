@@ -55,7 +55,7 @@ public struct AWSwiftDynamoDb: DynamoDbAction {
         }
     }
     
-    public func deleteItem(table: DynamoDbTable, keyValue: DynamoDbTableKeyValues, conditionExpression: String?, returnValues: DynamoDbReturnValue?, completion: @escaping ((_ response: [String: Any]?, _ error: AwsRequestErorr?) -> Void)) {
+    public func deleteItem(table: DynamoDbTable, keyValue: DynamoDbTableKeyValues, conditionExpression: String?, returnValues: DynamoDbReturnValue?, completion: @escaping ((_ response: String?, _ error: AwsRequestErorr?) -> Void)) {
         
         // Check valid return value
         if let returnValues = returnValues {
@@ -92,6 +92,18 @@ public struct AWSwiftDynamoDb: DynamoDbAction {
         
         if let returnValues = returnValues {
             request["ReturnValues"] = returnValues.rawValue
+        }
+        
+        let awsRequest = AwsRequest(awsAccessKeyId: awsAccessKeyId, awsAccessKeySecret: awsAccessKeySecret, service: DynamoDbService.deleteItem, region: .euWest1, request: request, requestMethod: .post)
+        awsRequest.makeRequest { (jsonResponse, error) in
+            if let error = error {
+                print("We did error: \(error)")
+                completion(nil, AwsRequestErorr.failed(message: error))
+            }
+            else {
+                print("Success")
+                completion(jsonResponse, nil)
+            }
         }
     }
 }
