@@ -1,4 +1,4 @@
-public struct DynamoDbTable: DynamoDbItemAction {
+public struct DynamoDbTable {
     
     // MARK: - Properties
     
@@ -28,14 +28,16 @@ public struct DynamoDbTable: DynamoDbItemAction {
         self.sortKey = sortKey
         self.connectionManager = connectionManager
     }
-    
-    // MARK = DynamoDbAction
-    // TODO documentation
-    
-    public func putItem(table: DynamoDbTable, item: [String : Any], condition: String, conditionAttributes: [String : [String : String]], completion: @escaping ((String?, AwsRequestErorr?) -> Void)) {
+}
+
+// MARK = DynamoDbAction
+
+// TODO documentation
+extension DynamoDbTable: DynamoDbItemAction {
+    public func putItem(item: [String : Any], condition: String, conditionAttributes: [String : [String : String]], completion: @escaping ((String?, AwsRequestErorr?) -> Void)) {
         
         let request = [
-            "TableName": table.tableName,
+            "TableName": tableName,
             "Item": item,
             "ConditionExpression": condition,
             "ExpressionAttributeValues": conditionAttributes
@@ -46,14 +48,14 @@ public struct DynamoDbTable: DynamoDbItemAction {
         }
     }
     
-    func getItem(table: DynamoDbTable, keyValues: DynamoDbTableKeyValues, completion: @escaping ((String?, AwsRequestErorr?) -> Void)) {
+    public func getItem(keyValues: DynamoDbTableKeyValues, completion: @escaping ((String?, AwsRequestErorr?) -> Void)) {
         var key = [
-            table.partitionKey: [
+            partitionKey: [
                 "S": keyValues.partitionKeyValue
             ]
         ]
         
-        if let sortKey = table.sortKey {
+        if let sortKey = sortKey {
             guard let sortKeyValue = keyValues.sortKeyValue else {
                 fatalError("Table has sort key but no sort key specified")
             }
@@ -62,7 +64,7 @@ public struct DynamoDbTable: DynamoDbItemAction {
         }
         
         let request = [
-            "TableName": table.tableName,
+            "TableName": tableName,
             "Key": key
             ] as [String: Any]
         
@@ -72,7 +74,7 @@ public struct DynamoDbTable: DynamoDbItemAction {
         
     }
     
-    public func deleteItem(table: DynamoDbTable, keyValue: DynamoDbTableKeyValues, conditionExpression: String?, returnValues: DynamoDbReturnValue?, completion: @escaping ((String?, AwsRequestErorr?) -> Void)) {
+    public func deleteItem(keyValue: DynamoDbTableKeyValues, conditionExpression: String?, returnValues: DynamoDbReturnValue?, completion: @escaping ((String?, AwsRequestErorr?) -> Void)) {
         
         // Check valid return value
         if let returnValues = returnValues {
@@ -85,12 +87,12 @@ public struct DynamoDbTable: DynamoDbItemAction {
         }
         
         var key = [
-            table.partitionKey: [
+            partitionKey: [
                 "S": keyValue.partitionKeyValue
             ]
         ]
         
-        if let sortKey = table.sortKey {
+        if let sortKey = sortKey {
             guard let sortKeyValue = keyValue.sortKeyValue else {
                 fatalError("Table has sort key but no sort key specified")
             }
@@ -99,7 +101,7 @@ public struct DynamoDbTable: DynamoDbItemAction {
         }
         
         var request = [
-            "TableName": table.tableName,
+            "TableName": tableName,
             "Key": key
             ] as [String: Any]
         
