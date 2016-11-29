@@ -18,7 +18,7 @@ struct AwsRequest {
         self.requestMethod = requestMethod
     }
     
-    func makeRequest(onCompletion: (_ jsonResponse: String?, _ error: String?) -> Void) {
+    func makeRequest(onCompletion: (_ jsonResponse: String?, _ error: AwsRequestErorr?) -> Void) {
         let headerHost = "\(service.getServiceHostname()).\(region.rawValue).amazonaws.com"
         let urlString = "https://\(headerHost)"
         let url = URL(string: urlString)!
@@ -30,7 +30,7 @@ struct AwsRequest {
         let jsonData = try? JSONSerialization.data(withJSONObject: request, options: .prettyPrinted)
         
         guard let json = jsonData else {
-            onCompletion(nil, "Could not convert request to JSON")
+            onCompletion(nil, .failed(message: "Could not convert request to JSON"))
             return
         }
         

@@ -1,4 +1,4 @@
-public struct AWSwiftDynamoDb: DynamoDbAction {
+public struct AWSwiftDynamoDb {
     
     fileprivate let awsAccessKeyId: String
     fileprivate let awsAccessKeySecret: String
@@ -98,7 +98,7 @@ public struct AWSwiftDynamoDb: DynamoDbAction {
         awsRequest.makeRequest { (jsonResponse, error) in
             if let error = error {
                 print("We did error: \(error)")
-                completion(nil, AwsRequestErorr.failed(message: error))
+                completion(nil, error)
             }
             else {
                 print("Success")
