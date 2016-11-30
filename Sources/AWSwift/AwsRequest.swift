@@ -18,7 +18,7 @@ struct AwsRequest {
         self.requestMethod = requestMethod
     }
     
-    func makeRequest(onCompletion: (_ jsonResponse: String?, _ error: AwsRequestErorr?) -> Void) {
+    func makeRequest(onCompletion: @escaping (_ jsonResponse: String?, _ error: AwsRequestErorr?) -> Void) {
         let headerHost = "\(service.getServiceHostname()).\(region.rawValue).amazonaws.com"
         let urlString = "https://\(headerHost)"
         let url = URL(string: urlString)!
@@ -52,12 +52,17 @@ struct AwsRequest {
         let dataTask = session.dataTask(with: urlRequest) {
             data, response, error in
             
-            // TODO
+            var responseString: String?
             if let data = data {
-                print("Data was \(data) - \(String(data: data, encoding: .utf8))")
+                responseString = String(data: data, encoding: .utf8)
             }
-            print("Response was \(response)")
-            print("Error was \(error)")
+            
+            var awsError: AwsRequestErorr?
+            
+            if let error = error {
+                awsError = .failed(message: "Request failed: \(error.localizedDescription)")
+            }
+            onCompletion(responseString, awsError)
         }
         
         dataTask.resume()
