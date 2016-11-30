@@ -36,30 +36,27 @@ let package = Package(
 
 ### DynamoDB
 
-Create an instance of the `AWSwiftDynamoDb` with your access ID and access Key Secret:
+Create an instance of the `ConnectionManager` with your access ID and access Key Secret and specify the region you wish to connect to:
 
 ```swift
 
-let dynamoDb = AWSwiftDynamoDb(awsAccessKeyId: accessID, awsAccessKeySecret: accessSecret)
+let connectionManager = ConnectionManager(accessId: accessID, accessSecret: accessSecret, region: .euWest1)
+
 ```
 
 Create a `DynamoDbTable` with the details for the table:
 
 ```swift
-let petsTable = DynamoDbTable(tableName: "Pets", partitionKey: "AnimalType", sortKey: "Name")
+let petsTable = DynamoDbTable(tableName: "Pets", partitionKey: "AnimalType", sortKey: "Name", connectionManager: connectionManager)
 ```
 
-Then perform the action that you want. For a get, you need a key and use it as so:
+Then perform the action that you want on the table. For a get, you need a key and use it as so:
 
 ```swift
-let key = [
-    "AnimalType": ["S": "Dog"],
-    "Name": ["S" : "Fred"]
-]
+let key = DynamoDbTableKeyValues(partitionKeyValue: "Dog", sortKeyValue: "Fred")
 
-dynamoDb.getItem(table: petsTable, key: key) {
-    response in
-    print(response)
+petsTable.getItem(keyValues: key) { (response, errror) in
+    print("Response was \(response)")
 }
 ```
 
